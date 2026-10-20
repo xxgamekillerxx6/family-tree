@@ -1,4 +1,4 @@
-# Family Tree
+﻿# Family Tree
 
 A small offline Windows app for building your own family tree, made with Electron and plain HTML/CSS/JavaScript.
 
@@ -19,7 +19,7 @@ A small offline Windows app for building your own family tree, made with Electro
 3. Get the code and install the libraries:
 
 ```bash
-git clone https://github.com/<your-username>/family-tree.git
+git clone https://github.com/xxgamekillerxx6/family-tree.git
 ```
 
 ```bash
@@ -73,7 +73,7 @@ access to your disk. Zooming, dragging, drawing lines and exporting pictures are
 | `app.js` | **All the app logic.** Split into numbered sections, explained below |
 
 Why the split between `main.js` and `app.js`? For safety, a web page isn't allowed to touch
-your files. So the page (`app.js`) asks `preload.js` → `main.js` to load and save for it.
+your files. So the page (`app.js`) asks `preload.js` â†’ `main.js` to load and save for it.
 
 ### `app.js` section by section
 
