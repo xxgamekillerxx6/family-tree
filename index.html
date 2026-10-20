@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="Content-Security-Policy"
@@ -8,13 +8,15 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Top bar with the main buttons -->
+  <!-- Elements marked data-i18n get translated by js/language.js (see the `sr` table there) -->
+
   <div id="toolbar">
-    <button id="add-btn">+ Add person</button>
-    <button id="list-btn">People list</button>
-    <button id="export-btn">Export picture</button>
-    <span class="hint">Drag empty space to move · Scroll to zoom · Double-click a card to edit ·
-      Drag from dot to dot to connect · Click a line to delete it</span>
+    <button id="add-btn" data-i18n>+ Add person</button>
+    <button id="list-btn" data-i18n>People list</button>
+    <button id="export-btn" data-i18n>Export picture</button>
+    <button id="center-btn" data-i18n>Center</button>
+    <span class="hint" data-i18n>Drag empty space to move · Scroll to zoom · Double-click a card to edit · Drag from dot to dot to connect · Right-click a line or dot to delete it</span>
+    <button id="lang-btn"></button>
   </div>
 
   <!-- The grid. "world" holds the cards and lines and is moved/zoomed as one piece. -->
@@ -24,42 +26,52 @@
     </div>
   </div>
 
-  <!-- Side panel with the list of people -->
   <div id="list-panel" hidden>
     <div class="panel-buttons">
-      <button id="print-list-btn">Print list</button>
-      <button id="close-list-btn">Close</button>
+      <button id="print-list-btn" data-i18n>Print list</button>
+      <button id="close-list-btn" data-i18n>Close</button>
     </div>
-    <h2>People</h2>
+    <h2 data-i18n>People</h2>
     <ol id="people-list"></ol>
   </div>
 
-  <!-- Popup for editing a person -->
   <dialog id="editor">
     <form method="dialog">
-      <h2>Edit person</h2>
+      <h2 data-i18n>Edit person</h2>
       <div class="photo-row">
         <img id="photo-preview" alt="">
         <div>
-          <input type="file" id="photo-input" accept="image/*">
-          <button type="button" id="remove-photo-btn">Remove photo</button>
+          <!-- The real file picker is hidden; this label opens it and can be translated -->
+          <label for="photo-input" class="button" data-i18n>Choose photo</label>
+          <input type="file" id="photo-input" accept="image/*" hidden>
+          <button type="button" id="remove-photo-btn" data-i18n>Remove photo</button>
         </div>
       </div>
-      <label>First name <input name="first"></label>
-      <label>Last name <input name="last"></label>
-      <label>Born (optional) <input name="birth" placeholder="e.g. 1950 or 12.03.1950"></label>
-      <label>Died (optional) <input name="death"></label>
-      <label>Description (optional) <textarea name="desc" rows="3"></textarea></label>
-      <label>Arm color <input type="color" name="color"></label>
+      <label><span data-i18n>First name</span> <input name="first"></label>
+      <label><span data-i18n>Last name</span> <input name="last"></label>
+      <label><span data-i18n>Born (optional)</span> <input name="birth"></label>
+      <label><span data-i18n>Died (optional)</span> <input name="death"></label>
+      <label><span data-i18n>Description (optional)</span> <textarea name="desc" rows="3"></textarea></label>
+      <label><span data-i18n>Arm color</span> <input type="color" name="color"></label>
       <div class="dialog-buttons">
-        <button value="delete" class="danger">Delete person</button>
-        <button value="cancel">Cancel</button>
-        <button value="save" class="primary">Save</button>
+        <button type="button" id="delete-btn" class="danger"></button>
+        <button value="cancel" data-i18n>Cancel</button>
+        <button value="save" class="primary" data-i18n>Save</button>
       </div>
     </form>
   </dialog>
 
   <script src="node_modules/html-to-image/dist/html-to-image.js"></script>
-  <script src="app.js"></script>
+  <!-- Order matters: start.js must be last, it runs everything -->
+  <script src="js/data.js"></script>
+  <script src="js/view.js"></script>
+  <script src="js/cards.js"></script>
+  <script src="js/lines.js"></script>
+  <script src="js/mouse.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/list.js"></script>
+  <script src="js/export.js"></script>
+  <script src="js/language.js"></script>
+  <script src="js/start.js"></script>
 </body>
 </html>

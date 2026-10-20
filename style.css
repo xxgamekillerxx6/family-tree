@@ -9,16 +9,20 @@ body {
   background: #fff;
 }
 
-button {
+button, label.button {
+  display: inline-block;
   font: inherit;
+  font-size: 15px;
+  color: #000;
   padding: 6px 12px;
+  margin: 0;
   border: 1px solid #bbb;
   border-radius: 6px;
   background: #f6f6f6;
   cursor: pointer;
   white-space: nowrap;
 }
-button:hover { background: #eaeaea; }
+button:hover, label.button:hover { background: #eaeaea; }
 button.primary { background: #2f6fde; border-color: #2f6fde; color: #fff; }
 button.danger { color: #c62828; margin-right: auto; }
 
@@ -31,6 +35,8 @@ button.danger { color: #c62828; margin-right: auto; }
   border-bottom: 1px solid #ddd;
 }
 .hint { color: #888; font-size: 12px; margin-left: 12px; }
+#lang-btn { margin-left: auto; }
+@media (max-width: 1100px) { .hint { display: none; } } /* no room for the hint in small windows */
 
 /* ---------- Grid ---------- */
 #viewport {
@@ -39,7 +45,7 @@ button.danger { color: #c62828; margin-right: auto; }
   overflow: hidden;
   user-select: none;
   cursor: grab;
-  /* Two sets of thin lines = a grid. app.js changes size/position when you zoom/move. */
+  /* Two sets of thin lines = a grid. js/view.js changes size/position when you zoom/move. */
   background-image:
     linear-gradient(#dcdcdc 1px, transparent 1px),
     linear-gradient(90deg, #dcdcdc 1px, transparent 1px);
