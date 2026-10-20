@@ -1,0 +1,20 @@
+{
+  "name": "family-tree",
+  "version": "1.0.0",
+  "description": "Offline family tree maker for Windows",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "package": "electron-packager . FamilyTree --platform=win32 --arch=x64 --out=dist --overwrite"
+  },
+  "author": "Aleksandar Dekan",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "html-to-image": "^1.11.13"
+  },
+  "devDependencies": {
+    "@electron/packager": "^20.3.0",
+    "electron": "^44.9.1"
+  }
+}
