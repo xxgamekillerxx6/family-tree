@@ -28,6 +28,18 @@ const sr = {
   'Unnamed': 'Bez imena',
   'Add connection point': 'Dodaj tačku za povezivanje',
   'Connected to:': 'Povezan/a sa:',
+  'Relations': 'Srodstvo',
+  'Relations:': 'Srodstvo:',
+  '+ Add relation': '+ Dodaj srodstvo',
+  'of': 'od',
+  // relation words (js/relations.js)
+  father: 'otac', mother: 'majka', son: 'sin', daughter: 'ćerka',
+  brother: 'brat', sister: 'sestra',
+  grandpa: 'deda', grandma: 'baba', grandson: 'unuk', granddaughter: 'unuka',
+  uncle: 'ujak/stric', aunt: 'tetka', nephew: 'nećak', niece: 'nećaka',
+  cousin: 'rođak/rođaka', husband: 'muž', wife: 'žena',
+  child: 'dete', parent: 'roditelj', sibling: 'brat/sestra', grandchild: 'unuče', grandparent: 'deda/baba',
+  'nephew/niece': 'nećak/nećaka', 'uncle/aunt': 'ujak/tetka', spouse: 'supružnik',
 };
 
 // The chosen language is remembered in the app's local storage (not in the tree file).

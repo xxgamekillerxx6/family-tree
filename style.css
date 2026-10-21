@@ -155,7 +155,9 @@ button.danger { color: #c62828; margin-right: auto; }
 
 /* ---------- Edit popup ---------- */
 dialog {
-  width: 380px;
+  width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
   border: none;
   border-radius: 10px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
@@ -173,4 +175,8 @@ dialog input:not([type]), dialog textarea {
 .photo-row { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
 #photo-preview { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; background: #eee; }
 #photo-preview:not([src]), #photo-preview[src=""] { visibility: hidden; }
+.relations-title { font-size: 13px; color: #444; margin-bottom: 6px; }
+.relation { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; font-size: 13px; }
+.relation select { flex: 1; min-width: 0; padding: 4px; font: inherit; border: 1px solid #bbb; border-radius: 6px; }
+.relation .remove-relation { padding: 2px 8px; }
 .dialog-buttons { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }

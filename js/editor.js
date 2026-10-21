@@ -12,6 +12,7 @@ function openEditor(p) {
   photoInput.value = '';
   deleteBtn.textContent = t('Delete person');
   deleteBtn.hidden = !data.people.includes(p); // a brand-new person has nothing to delete yet
+  showRelations(p);
   editor.returnValue = '';
   editor.showModal();
 }
@@ -45,6 +46,7 @@ editor.addEventListener('close', () => {
     FIELDS.forEach((f) => (editing[f] = form[f].value.trim()));
     editing.photo = photoPreview.getAttribute('src');
     if (!data.people.includes(editing)) data.people.push(editing); // new person
+    saveRelations(editing);
   } else if (editor.returnValue === 'delete') {
     data.people = data.people.filter((p) => p !== editing);
     data.links = data.links.filter((l) => l.from.id !== editing.id && l.to.id !== editing.id);

@@ -57,6 +57,7 @@ A window opens with your tree. When you change the code, close the window and ru
 | Delete a line (dots stay) | Right-click the line |
 | Delete a dot (and its lines) | Right-click the dot |
 | Delete a person | Edit → **Delete person** → click again |
+| Add relations (brother, father…) | Edit → **+ Add relation** → pick e.g. *son* of *Alexa Dekan* → **Save**. The line is drawn for you |
 | See everyone | **People list** (with **Print list**) |
 | Picture of the whole tree | **Export picture** (saves a PNG) |
 | Language | **Srpski / English** button top right |
@@ -166,6 +167,7 @@ family-tree/
 │   ├── lines.js      4. drawing connection lines
 │   ├── mouse.js      5. all mouse actions (drag, click, right-click, double-click)
 │   ├── editor.js     6. the edit popup
+│   ├── relations.js     relation rows (brother, father…) and their automatic lines
 │   ├── list.js       7. the people list
 │   ├── export.js     8. export picture
 │   ├── language.js   9. English / Serbian
@@ -207,7 +209,8 @@ Everything about your tree is in one JavaScript object called `data`. It is save
   ],
   "links": [
     { "from": { "id": "3f2a…", "side": "right", "index": 0 },
-      "to":   { "id": "9b1c…", "side": "left",  "index": 0 } }
+      "to":   { "id": "9b1c…", "side": "left",  "index": 0 },
+      "relation": { "who": "9b1c…", "word": "daughter" } }
   ]
 }
 ```
@@ -217,6 +220,8 @@ Everything about your tree is in one JavaScript object called `data`. It is save
 - `ports`: how many dots each side has.
 - A **link** connects two dots. It says *"Marko's right side, dot number 0 ↔ Ana's left side, dot number 0"*.
   Dots are counted from 0, top to bottom.
+- `relation` (optional): what the line means. `{ who: Ana, word: "daughter" }` reads *"Ana is the daughter of the
+  other person (Marko)"*. Lines you draw by hand have no `relation`.
 
 ## 6. The code, file by file
 
@@ -419,13 +424,65 @@ phone photo becomes about 20 KB in the save file.
 **Delete** needs two clicks: the first changes the button text to "Click again to delete", and the second closes
 the popup with `'delete'`.
 
-### `js/list.js`: the people list
+### `js/relations.js`: brother, father, cousin… connected automatically
 
-Sorts everyone by name and, for each person, finds every link that has them on either end:
+In the edit popup, **+ Add relation** adds a row: `[son ▾] of [Alexa Dekan ▾] [×]`. On **Save**, every row becomes a line.
+
+All relation words are in one table, each with how it reads *from the other person's side*:
 
 ```js
-const connected = data.links
-  .filter((l) => l.from.id === p.id || l.to.id === p.id)
+const INVERSE = {
+  father: 'child', mother: 'child', son: 'parent', daughter: 'parent',
+  brother: 'sibling', sister: 'sibling',
+  grandpa: 'grandchild', grandma: 'grandchild', grandson: 'grandparent', granddaughter: 'grandparent',
+  ...
+};
+```
+
+If Petar is *son* of Alexa, Alexa is *parent* of Petar. The reverse word is neutral (parent, not mother/father)
+because the app doesn't store anyone's gender.
+
+**Which color the line gets:** a line always takes the color of the card it starts *from* (see `drawLines`). So the
+only decision is where it starts:
+
+```js
+const YOUNGER = ['son', 'daughter', 'grandson', 'granddaughter'];
+...
+const from = YOUNGER.includes(word) ? other : p;
+```
+
+- *son of Alexa*: Alexa is the elder, so the line starts at Alexa and is **her color**. *father of Petar* starts at
+  you, the elder, so it's **your color**. Parent and grandparent lines are always in the elder's color.
+- *brother, sister, cousin, uncle, husband…*: the line starts at the card you're editing, so it's **your color**.
+
+**Which dots:** `dotFacing()` picks the side of each card that faces the other card, uses the first dot there that has
+no line yet, and adds a new dot if they're all taken:
+
+```js
+function dotFacing(p, other) {
+  const side = other.x >= p.x ? 'right' : 'left';
+  ...
+  while (index < p.ports[side] && used(index)) index++;
+  if (index === p.ports[side]) p.ports[side]++; // all dots taken: add one
+  return { id: p.id, side, index };
+}
+```
+
+**Saving:** each relation belongs to the person whose popup created it (`relation.who`). On Save, `saveRelations()`
+removes that person's old relation lines and draws one for each row, so changing or removing a row just works.
+Lines drawn by hand are never touched.
+
+### `js/list.js`: the people list
+
+Sorts everyone by name and, for each person, finds every link that has them on either end. Links with a relation
+show under **Relations** (`relationText()` turns them into *"son of Alexa Dekan"* or, from the other side,
+*"parent of Petar Dekan"*). Hand-drawn links show under **Connected to**:
+
+```js
+const lines = data.links.filter((l) => l.from.id === p.id || l.to.id === p.id);
+const relations = lines.filter((l) => l.relation).map((l) => relationText(l, p));
+const connected = lines
+  .filter((l) => !l.relation) // lines drawn by hand have no relation
   .map((l) => fullName(findPerson(l.from.id === p.id ? l.to.id : l.from.id)));
 ```
 
